@@ -3,12 +3,12 @@
 %global gemname ffi
 %global geminstdir %{gemdir}/gems/%{gemname}-%{version}
 %global libname %{gemname}_c.so 
-%global githubhash 57b5d81
+%global githubhash 7abe057
 %global tarballname ffi-ffi-%{githubhash}
 
 Name:           rubygem-%{gemname}
-Version:        0.5.4
-Release:        3%{?dist}
+Version:        0.6.2
+Release:        1%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -61,6 +61,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{geminstdir}/README.rdoc 
+%doc %{geminstdir}/History.txt
 %doc %{geminstdir}/LICENSE 
 %doc %{gemdir}/doc/%{gemname}-%{version}
 %dir %{geminstdir}
@@ -69,12 +70,16 @@ rm -rf %{buildroot}
 %{geminstdir}/gen
 %{geminstdir}/lib
 %{geminstdir}/spec
+%{geminstdir}/tasks
 %{ruby_sitearch}/%{libname}
 %{gemdir}/cache/%{gemname}-%{version}.gem
 %{gemdir}/specifications/%{gemname}-%{version}.gemspec 
 
 
 %changelog
+* Tue Feb 22 2010 Bryan Kearney <bkearney@redhat.com> - 0.6.2-1
+- Pull in 0.6.2 from upstream
+
 * Tue Feb 22 2010 Bryan Kearney <bkearney@redhat.com> - 0.5.4-3
 - Final updates based on package review
 
