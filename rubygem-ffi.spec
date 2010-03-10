@@ -3,11 +3,11 @@
 %global gemname ffi
 %global geminstdir %{gemdir}/gems/%{gemname}-%{version}
 %global libname %{gemname}_c.so 
-%global githubhash 7abe057
+%global githubhash b69a5e3
 %global tarballname ffi-ffi-%{githubhash}
 
 Name:           rubygem-%{gemname}
-Version:        0.6.2
+Version:        0.6.3
 Release:        1%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 10 2010 Bryan Kearney <bkearney@redhat.com> - 0.6.2-1
+- Power PC fixes from upstream which were found testing 0.6.2
+
 * Tue Feb 22 2010 Bryan Kearney <bkearney@redhat.com> - 0.6.2-1
 - Pull in 0.6.2 from upstream
 
