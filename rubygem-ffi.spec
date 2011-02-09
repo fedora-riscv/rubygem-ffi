@@ -8,7 +8,7 @@
 
 Name:           rubygem-%{gemname}
 Version:        0.6.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Wed Mar 10 2010 Bryan Kearney <bkearney@redhat.com> - 0.6.2-1
 - Power PC fixes from upstream which were found testing 0.6.2
 
