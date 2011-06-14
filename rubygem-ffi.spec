@@ -10,11 +10,11 @@
 
 Name:           rubygem-%{gemname}
 Version:        1.0.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
-License:        GPLv3
+License:        LGPLv3
 URL:            http://wiki.github.com/ffi/ffi
 # The source file is hosted at github. You can access this tarball with
 # the following link:
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2011 Bryan Kearney <bkearney@redhat.com> - 1.0.9-2
+- Fixed the License, it is actually LGPL
+
 * Mon Jun 13 2011 Bryan Kearney <bkearney@redhat.com> - 1.0.9-1
 - Bring in 1.0.9 from upstream.
 
