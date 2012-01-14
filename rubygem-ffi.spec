@@ -10,7 +10,7 @@
 
 Name:           rubygem-%{gemname}
 Version:        1.0.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Jun 14 2011 Bryan Kearney <bkearney@redhat.com> - 1.0.9-2
 - Fixed the License, it is actually LGPL
 
