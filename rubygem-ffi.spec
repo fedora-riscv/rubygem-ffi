@@ -1,16 +1,13 @@
-%{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")}
-%{!?gemdir: %global gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)}
-%global gemname ffi
-%global geminstdir %{gemdir}/gems/%{gemname}-%{version}
-%global libname %{gemname}_c.so 
+%global gem_name ffi
+%global libname %{gem_name}_c.so
 %global githubhash b79eb61
 %global githubbuild 0
 %global tarballname ffi-ffi-%{version}-%{githubbuild}-g%{githubhash}
 %global gitinternalname ffi-ffi-%{githubhash}
 
-Name:           rubygem-%{gemname}
+Name:           rubygem-%{gem_name}
 Version:        1.0.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -22,12 +19,13 @@ URL:            http://wiki.github.com/ffi/ffi
 Source0:        %{tarballname}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  ruby ruby-devel rubygems rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec) rubygem(rspec-core)
+BuildRequires:  ruby ruby-devel rubygems-devel rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec-core)
+BuildRequires: ruby-devel
 BuildRequires:  pkgconfig
 Requires:       libffi
-Requires:       rubygems
-Requires:       ruby(abi) = 1.8
-Provides:       rubygem(%{gemname}) = %{version}
+Requires: ruby(rubygems)
+Requires:       ruby(abi) = 1.9.1
+Provides:       rubygem(%{gem_name}) = %{version}
 
 %description
 Ruby-FFI is a ruby extension for programmatically loading dynamic
@@ -43,19 +41,21 @@ using Ruby-FFI here[http://wiki.github.com/ffi/ffi/why-use-ffi].
 export CFLAGS="%{optflags}"
 export CONFIGURE_ARGS="--with-cflags='%{optflags}'"
 rake gem
-gem install -V -d --local --no-ri -i ./geminst --force pkg/%{gemname}-%{version}.gem 
+gem install -V -d --local --no-ri -i ./geminst --force pkg/%{gem_name}-%{version}.gem
 
 %install
 rm -rf %{buildroot}
 mkdir %{buildroot}
-install -d -m0755 %{buildroot}%{gemdir}
-install -d -m0755  %{buildroot}%{ruby_sitearch}
-cp -R %{_builddir}/%{gitinternalname}/geminst/* %{buildroot}%{gemdir}
-mv %{buildroot}%{geminstdir}/lib/%{libname} %{buildroot}%{ruby_sitearch}/%{libname} 
-rm -rf %{buildroot}%{geminstdir}/lib/%{libname}
-rm -rf %{buildroot}%{geminstdir}/ext
+install -d -m0755 %{buildroot}%{gem_dir}
+install -d -m0755  %{buildroot}%{gem_extdir}/lib
+cp -R %{_builddir}/%{gitinternalname}/geminst/* %{buildroot}%{gem_dir}
+mv %{buildroot}%{gem_libdir}/%{libname} %{buildroot}%{gem_extdir}/lib/%{libname}
+rm -rf %{buildroot}%{gem_libdir}/%{libname}
+rm -rf %{buildroot}%{gem_instdir}/ext
 
 %check
+# https://github.com/ffi/ffi/issues/189
+sed -i -e 's| -mimpure-text||' libtest/GNUmakefile
 rake -v test
 
 %clean
@@ -63,26 +63,29 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{geminstdir}/README.rdoc 
-%doc %{geminstdir}/History.txt
-%doc %{geminstdir}/LICENSE 
-%doc %{gemdir}/doc/%{gemname}-%{version}
-%dir %{geminstdir}
+%doc %{gem_instdir}/README.rdoc
+%doc %{gem_instdir}/History.txt
+%doc %{gem_instdir}/LICENSE
+%doc %{gem_docdir}
+%dir %{gem_instdir}
 # This file does not exist in 15
 %if 0%{?fedora} <= 14
-    %{geminstdir}/.require_paths
+    %{gem_instdir}/.require_paths
 %endif
-%{geminstdir}/Rakefile
-%{geminstdir}/gen
-%{geminstdir}/lib
-%{geminstdir}/spec
-%{geminstdir}/tasks
-%{ruby_sitearch}/%{libname}
-%{gemdir}/cache/%{gemname}-%{version}.gem
-%{gemdir}/specifications/%{gemname}-%{version}.gemspec 
+%{gem_instdir}/Rakefile
+%{gem_instdir}/gen
+%{gem_libdir}
+%{gem_instdir}/spec
+%{gem_instdir}/tasks
+%{gem_extdir}/
+%{gem_cache}
+%{gem_spec}
 
 
 %changelog
+* Thu Feb 02 2012 Vít Ondruch <vondruch@redhat.com> - 1.0.9-4
+- Rebuilt for Ruby 1.9.3.
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
