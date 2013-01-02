@@ -7,7 +7,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.9
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -19,7 +19,7 @@ URL:            http://wiki.github.com/ffi/ffi
 Source0:        %{tarballname}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  ruby ruby-devel rubygems-devel rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec-core)
+BuildRequires:  ruby ruby-devel rubygems rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec-core)
 BuildRequires: ruby-devel
 BuildRequires:  pkgconfig
 Requires:       libffi
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 01 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-6
+- Change dependency to rubygems instead of rubgems-devel
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
