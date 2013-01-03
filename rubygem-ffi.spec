@@ -91,7 +91,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Thu 03 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-7
+* Thu Jan 03 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-7
 - Add the gem macros which rubygems-devel would have provided
 
 * Wed Jan 01 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-6
