@@ -15,7 +15,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.9
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
