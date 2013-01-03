@@ -1,9 +1,17 @@
-%global gem_name ffi
-%global libname %{gem_name}_c.so
-%global githubhash b79eb61
-%global githubbuild 0
-%global tarballname ffi-ffi-%{version}-%{githubbuild}-g%{githubhash}
+%global gem_name        ffi
+%global libname         %{gem_name}_c.so
+%global githubhash      b79eb61
+%global githubbuild     0
+%global tarballname     ffi-ffi-%{version}-%{githubbuild}-g%{githubhash}
 %global gitinternalname ffi-ffi-%{githubhash}
+%global gem_dir         /usr/share/rubygems
+%global gem_instdir     %{gem_dir}/gems/%{gem_name}-%{version}
+%global gem_libdir      %{gem_instdir}/lib
+%global gem_cache       %{gem_dir}/cache/%{gem_name}-%{version}.gem
+%global gem_spec        %{gem_dir}/specifications/%{gem_name}-%{version}.gemspec
+%global gem_extdir      %{_libdir}/gems/exts/%{gem_name}-%{version}
+%global gem_docdir      %{gem_dir}/doc/%{gem_name}-%{version}
+
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.9
@@ -83,6 +91,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Thu 03 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-7
+- Add the gem macros which rubygems-devel would have provided
+
 * Wed Jan 01 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-6
 - Change dependency to rubygems instead of rubgems-devel
 
