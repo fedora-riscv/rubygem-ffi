@@ -15,7 +15,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.9
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -32,7 +32,7 @@ BuildRequires: ruby-devel
 BuildRequires:  pkgconfig
 Requires:       libffi
 Requires: ruby(rubygems)
-Requires:       ruby(abi) = 1.9.1
+Requires:       ruby(abi) = 1.8
 Provides:       rubygem(%{gem_name}) = %{version}
 
 %description
@@ -91,6 +91,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 07 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-8
+- Change the ruby version back to 1.8
+
 * Thu Jan 03 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-7
 - Add the gem macros which rubygems-devel would have provided
 
