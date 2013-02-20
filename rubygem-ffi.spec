@@ -1,30 +1,21 @@
 %global gem_name ffi
-%global libname %{gem_name}_c.so
-%global githubhash b79eb61
-%global githubbuild 0
-%global tarballname ffi-ffi-%{version}-%{githubbuild}-g%{githubhash}
-%global gitinternalname ffi-ffi-%{githubhash}
 
 Name:           rubygem-%{gem_name}
-Version:        1.0.9
-Release:        6%{?dist}
+Version:        1.4.0
+Release:        1%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
 License:        LGPLv3
 URL:            http://wiki.github.com/ffi/ffi
-# The source file is hosted at github. You can access this tarball with
-# the following link:
-#          http://github.com/ffi/ffi/tarball/1.0.9
-Source0:        %{tarballname}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
 
-BuildRequires:  ruby ruby-devel rubygems-devel rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec-core)
-BuildRequires: ruby-devel
-BuildRequires:  pkgconfig
-Requires:       libffi
-Requires: ruby(rubygems)
-Requires:       ruby(abi) = 1.9.1
+BuildRequires:  ruby-devel
+BuildRequires:  rubygems-devel
+BuildRequires:	libffi-devel
+BuildRequires:	rubygem(rspec)
+Requires:       ruby(rubygems)
+Requires:       ruby(abi)
 Provides:       rubygem(%{gem_name}) = %{version}
 
 %description
@@ -35,54 +26,64 @@ on Ruby and JRuby. Discover why should you write your next extension
 using Ruby-FFI here[http://wiki.github.com/ffi/ffi/why-use-ffi].
 
 %prep
-%setup -q -n %{gitinternalname}
+gem unpack %{SOURCE0}
+%setup -q -D -T -n  %{gem_name}-%{version}
+
+gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 
 %build
-export CFLAGS="%{optflags}"
+mkdir -p ./%{gem_dir}
+
+# Create the gem as gem install only works on a gem file
+gem build %{gem_name}.gemspec
+
 export CONFIGURE_ARGS="--with-cflags='%{optflags}'"
-rake gem
-gem install -V -d --local --no-ri -i ./geminst --force pkg/%{gem_name}-%{version}.gem
+gem install -V \
+        --local \
+        --install-dir ./%{gem_dir} \
+        --bindir ./%{_bindir} \
+        --force \
+        --rdoc \
+        %{gem_name}-%{version}.gem
 
 %install
-rm -rf %{buildroot}
-mkdir %{buildroot}
-install -d -m0755 %{buildroot}%{gem_dir}
-install -d -m0755  %{buildroot}%{gem_extdir}/lib
-cp -R %{_builddir}/%{gitinternalname}/geminst/* %{buildroot}%{gem_dir}
-mv %{buildroot}%{gem_libdir}/%{libname} %{buildroot}%{gem_extdir}/lib/%{libname}
-rm -rf %{buildroot}%{gem_libdir}/%{libname}
-rm -rf %{buildroot}%{gem_instdir}/ext
+mkdir -p %{buildroot}%{gem_dir}
+cp -pa .%{gem_dir}/* \
+        %{buildroot}%{gem_dir}/
+
+mkdir -p %{buildroot}%{gem_extdir}/lib
+mv %{buildroot}%{gem_instdir}/lib/ffi_c.so %{buildroot}%{gem_extdir}/lib/
 
 %check
-# https://github.com/ffi/ffi/issues/189
-sed -i -e 's| -mimpure-text||' libtest/GNUmakefile
-rake -v test
-
-%clean
-rm -rf %{buildroot}
+pushd .%{gem_instdir}
+make -f libtest/GNUmakefile
+rspec spec
+popd
 
 %files
-%defattr(-,root,root,-)
-%doc %{gem_instdir}/README.rdoc
+%doc %{gem_instdir}/COPYING
+%doc %{gem_instdir}/COPYING.LESSER
+%doc %{gem_instdir}/README.md
 %doc %{gem_instdir}/History.txt
 %doc %{gem_instdir}/LICENSE
 %doc %{gem_docdir}
 %dir %{gem_instdir}
-# This file does not exist in 15
-%if 0%{?fedora} <= 14
-    %{gem_instdir}/.require_paths
-%endif
 %{gem_instdir}/Rakefile
 %{gem_instdir}/gen
+%exclude %{gem_instdir}/ext
+%exclude %{gem_instdir}/libtest
+%{gem_instdir}/ffi.gemspec
 %{gem_libdir}
 %{gem_instdir}/spec
-%{gem_instdir}/tasks
 %{gem_extdir}/
-%{gem_cache}
+%exclude %{gem_cache}
 %{gem_spec}
 
 
 %changelog
+* Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 1.4.0-1
+- Update to FFI 1.4.0.
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
