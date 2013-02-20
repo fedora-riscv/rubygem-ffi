@@ -15,7 +15,7 @@ BuildRequires:  rubygems-devel
 BuildRequires:	libffi-devel
 BuildRequires:	rubygem(rspec)
 Requires:       ruby(rubygems)
-Requires:       ruby(abi)
+Requires:       ruby(release)
 Provides:       rubygem(%{gem_name}) = %{version}
 
 %description
@@ -32,19 +32,11 @@ gem unpack %{SOURCE0}
 gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 
 %build
-mkdir -p ./%{gem_dir}
 
 # Create the gem as gem install only works on a gem file
 gem build %{gem_name}.gemspec
 
-export CONFIGURE_ARGS="--with-cflags='%{optflags}'"
-gem install -V \
-        --local \
-        --install-dir ./%{gem_dir} \
-        --bindir ./%{_bindir} \
-        --force \
-        --rdoc \
-        %{gem_name}-%{version}.gem
+%gem_install
 
 %install
 mkdir -p %{buildroot}%{gem_dir}
@@ -82,6 +74,7 @@ popd
 
 %changelog
 * Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 1.4.0-1
+- Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 - Update to FFI 1.4.0.
 
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-6
