@@ -43,8 +43,8 @@ mkdir -p %{buildroot}%{gem_dir}
 cp -pa .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
-mkdir -p %{buildroot}%{gem_extdir}/lib
-mv %{buildroot}%{gem_instdir}/lib/ffi_c.so %{buildroot}%{gem_extdir}/lib/
+mkdir -p %{buildroot}%{gem_extdir_mri}/lib
+mv %{buildroot}%{gem_instdir}/lib/ffi_c.so %{buildroot}%{gem_extdir_mri}/lib/
 
 %check
 pushd .%{gem_instdir}
@@ -67,7 +67,7 @@ popd
 %{gem_instdir}/ffi.gemspec
 %{gem_libdir}
 %{gem_instdir}/spec
-%{gem_extdir}/
+%{gem_extdir_mri}/
 %exclude %{gem_cache}
 %{gem_spec}
 
