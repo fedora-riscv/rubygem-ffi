@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.4.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -73,6 +73,9 @@ popd
 
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Mar 26 2013 Vít Ondruch <vondruch@redhat.com> - 1.4.0-2
 - Use %%{gem_extdir_mri} instead of %%{gem_extdir}.
 
