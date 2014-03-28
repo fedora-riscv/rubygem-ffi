@@ -1,21 +1,14 @@
-%global gem_name        ffi
-%global libname         %{gem_name}_c.so
-%global githubhash      b79eb61
-%global githubbuild     0
-%global tarballname     ffi-ffi-%{version}-%{githubbuild}-g%{githubhash}
+%{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")}
+%global gem_name ffi
+%global libname %{gem_name}_c.so
+%global githubhash b79eb61
+%global githubbuild 0
+%global tarballname ffi-ffi-%{version}-%{githubbuild}-g%{githubhash}
 %global gitinternalname ffi-ffi-%{githubhash}
-%global gem_dir         /usr/share/rubygems
-%global gem_instdir     %{gem_dir}/gems/%{gem_name}-%{version}
-%global gem_libdir      %{gem_instdir}/lib
-%global gem_cache       %{gem_dir}/cache/%{gem_name}-%{version}.gem
-%global gem_spec        %{gem_dir}/specifications/%{gem_name}-%{version}.gemspec
-%global gem_extdir      %{_libdir}/gems/exts/%{gem_name}-%{version}
-%global gem_docdir      %{gem_dir}/doc/%{gem_name}-%{version}
-
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.9
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -27,8 +20,7 @@ URL:            http://wiki.github.com/ffi/ffi
 Source0:        %{tarballname}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  ruby ruby-devel rubygems rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec-core)
-BuildRequires: ruby-devel
+BuildRequires:  ruby-devel rubygems-devel rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec-core)
 BuildRequires:  pkgconfig
 Requires:       libffi
 Requires: ruby(rubygems)
@@ -55,10 +47,9 @@ gem install -V -d --local --no-ri -i ./geminst --force pkg/%{gem_name}-%{version
 rm -rf %{buildroot}
 mkdir %{buildroot}
 install -d -m0755 %{buildroot}%{gem_dir}
-install -d -m0755  %{buildroot}%{gem_extdir}/lib
+install -d -m0755  %{buildroot}%{ruby_sitearch}
 cp -R %{_builddir}/%{gitinternalname}/geminst/* %{buildroot}%{gem_dir}
-mv %{buildroot}%{gem_libdir}/%{libname} %{buildroot}%{gem_extdir}/lib/%{libname}
-rm -rf %{buildroot}%{gem_libdir}/%{libname}
+mv %{buildroot}%{gem_libdir}/%{libname} %{buildroot}%{ruby_sitearch}/%{libname}
 rm -rf %{buildroot}%{gem_instdir}/ext
 
 %check
@@ -85,12 +76,15 @@ rm -rf %{buildroot}
 %{gem_libdir}
 %{gem_instdir}/spec
 %{gem_instdir}/tasks
-%{gem_extdir}/
+%{ruby_sitearch}/%{libname}
 %{gem_cache}
 %{gem_spec}
 
 
 %changelog
+* Wed Mar 26 2014 Dominic Cleal <dcleal@redhat.com> - 1.0.9-9
+- Fix install location of built library and gemspec (RHBZ#975332)
+
 * Thu Jan 07 2013 Bryan Kearney <bkearney@redhat.com> - 1.0.9-8
 - Change the ruby version back to 1.8
 
