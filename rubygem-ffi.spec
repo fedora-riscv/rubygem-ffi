@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.4.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -43,13 +43,27 @@ mkdir -p %{buildroot}%{gem_dir}
 cp -pa .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
+%if 0%{?fedora} >= 21
+mkdir -p %{buildroot}%{gem_extdir_mri}
+cp -a ./%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
+
+pushd %{buildroot}
+rm -f .%{gem_extdir_mri}/{gem_make.out,mkmf.log}
+popd
+
+%else
 mkdir -p %{buildroot}%{gem_extdir_mri}/lib
 mv %{buildroot}%{gem_instdir}/lib/ffi_c.so %{buildroot}%{gem_extdir_mri}/lib/
+
+%endif
 
 %check
 pushd .%{gem_instdir}
 make -f libtest/GNUmakefile
-rspec spec
+%if 0%{?fedora} >= 21
+ruby -Ilib:ext/ffi_c -S \
+%endif
+	rspec spec
 popd
 
 %files
@@ -73,6 +87,9 @@ popd
 
 
 %changelog
+* Sat May  3 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.4.0-4
+- F-21: rebuild for ruby 2.1 / rubygems 2.2
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
