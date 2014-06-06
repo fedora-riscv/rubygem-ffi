@@ -1,12 +1,12 @@
 %global gem_name ffi
 
 Name:           rubygem-%{gem_name}
-Version:        1.4.0
-Release:        4%{?dist}
+Version:        1.9.3
+Release:        1%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
-License:        LGPLv3
+License:        BSD
 URL:            http://wiki.github.com/ffi/ffi
 Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
 
@@ -73,9 +73,7 @@ popd
 
 %files
 %doc %{gem_instdir}/COPYING
-%doc %{gem_instdir}/COPYING.LESSER
 %doc %{gem_instdir}/README.md
-%doc %{gem_instdir}/History.txt
 %doc %{gem_instdir}/LICENSE
 %doc %{gem_docdir}
 %dir %{gem_instdir}
@@ -92,6 +90,9 @@ popd
 
 
 %changelog
+* Thu Jun 05 2014 Dominic Cleal <dcleal@redhat.com> - 1.9.3-1
+- Update to FFI 1.9.3
+
 * Sat May  3 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.4.0-4
 - F-21: rebuild for ruby 2.1 / rubygems 2.2
 
