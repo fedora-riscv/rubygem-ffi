@@ -8,7 +8,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.9
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -19,6 +19,8 @@ URL:            http://wiki.github.com/ffi/ffi
 #          http://github.com/ffi/ffi/tarball/1.0.9
 Source0:        %{tarballname}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Patch1:         0001-Fix-issue-114-Structs-no-longer-support-bools.patch
 
 BuildRequires:  ruby-devel rubygems-devel rubygem(rake) rubygem(rake-compiler) libffi-devel rubygem(rspec-core)
 BuildRequires:  pkgconfig
@@ -36,6 +38,7 @@ using Ruby-FFI here[http://wiki.github.com/ffi/ffi/why-use-ffi].
 
 %prep
 %setup -q -n %{gitinternalname}
+%patch1 -p1
 
 %build
 export CFLAGS="%{optflags}"
@@ -82,6 +85,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 08 2014 Dominic Cleal <dcleal@redhat.com> - 1.0.9-10
+- Fix support for bools in structs (upstream #114)
+
 * Wed Mar 26 2014 Dominic Cleal <dcleal@redhat.com> - 1.0.9-9
 - Fix install location of built library and gemspec (RHBZ#975332)
 

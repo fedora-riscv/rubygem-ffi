@@ -1,0 +1,121 @@
+From 2e84385010cd544efb475672ba52d8e466e05332 Mon Sep 17 00:00:00 2001
+From: Wayne Meissner <wmeissner@gmail.com>
+Date: Sun, 29 May 2011 18:01:28 +1000
+Subject: [PATCH] Fix issue #114 (Structs no longer support bools).
+
+(cherry picked from commit 21d839cf5ff5f0920bd6818ff47ab95a0c2ee739)
+
+Add failing spec to for FFI::Struct :bool member
+
+(cherry picked from commit da06600c806375c5a7eb30d09845de12112a752f)
+
+Add bool operation for Struct#[]
+
+(cherry picked from commit 5cd65c41941d6e6788444817185e0fa23cfb71f9)
+
+Conflicts:
+	ext/ffi_c/AbstractMemory.c
+---
+ ext/ffi_c/AbstractMemory.c       | 16 ++++++++++++++++
+ ext/ffi_c/AbstractMemory.h       |  3 +++
+ lib/ffi/struct_layout_builder.rb |  3 ++-
+ spec/ffi/struct_spec.rb          | 11 +++++++++++
+ 4 files changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/ext/ffi_c/AbstractMemory.c b/ext/ffi_c/AbstractMemory.c
+index 5359bc7..1849d16 100644
+--- a/ext/ffi_c/AbstractMemory.c
++++ b/ext/ffi_c/AbstractMemory.c
+@@ -256,6 +256,21 @@ get_pointer_value(VALUE value)
+ 
+ NUM_OP(pointer, void *, get_pointer_value, rbffi_Pointer_NewInstance, NOSWAP);
+ 
++static inline uint8_t
++rbffi_bool_value(VALUE value)
++{
++    return RTEST(value);
++}
++
++static inline VALUE
++rbffi_bool_new(uint8_t value)
++{
++    return (value & 1) != 0 ? Qtrue : Qfalse;
++}
++
++NUM_OP(bool, unsigned char, rbffi_bool_value, rbffi_bool_new, NOSWAP);
++
++
+ static VALUE
+ memory_clear(VALUE self)
+ {
+@@ -535,6 +550,7 @@ MemoryOps rbffi_AbstractMemoryOps = {
+     .float64 = &memory_op_float64,
+     .pointer = &memory_op_pointer,
+     .strptr = &memory_op_strptr,
++    .boolOp = &memory_op_bool,
+ };
+ 
+ void
+diff --git a/ext/ffi_c/AbstractMemory.h b/ext/ffi_c/AbstractMemory.h
+index 1ba5bcb..f902856 100644
+--- a/ext/ffi_c/AbstractMemory.h
++++ b/ext/ffi_c/AbstractMemory.h
+@@ -60,6 +60,7 @@ typedef struct {
+     MemoryOp* float64;
+     MemoryOp* pointer;
+     MemoryOp* strptr;
++    MemoryOp* boolOp;
+ } MemoryOps;
+ 
+ struct AbstractMemory_ {
+@@ -136,6 +137,8 @@ get_memory_op(Type* type)
+             return rbffi_AbstractMemoryOps.pointer;
+         case NATIVE_STRING:
+             return rbffi_AbstractMemoryOps.strptr;
++        case NATIVE_BOOL:
++            return rbffi_AbstractMemoryOps.boolOp;
+         default:
+             return NULL;
+     }
+diff --git a/lib/ffi/struct_layout_builder.rb b/lib/ffi/struct_layout_builder.rb
+index c1aec44..40f0066 100644
+--- a/lib/ffi/struct_layout_builder.rb
++++ b/lib/ffi/struct_layout_builder.rb
+@@ -71,6 +71,7 @@ module FFI
+       Type::UINT64,
+       Type::FLOAT32,
+       Type::FLOAT64,
++      Type::BOOL,
+     ]
+ 
+     def add(name, type, offset = nil)
+@@ -155,4 +156,4 @@ module FFI
+     end
+   end
+ 
+-end
+\ No newline at end of file
++end
+diff --git a/spec/ffi/struct_spec.rb b/spec/ffi/struct_spec.rb
+index 4c00c93..4add214 100644
+--- a/spec/ffi/struct_spec.rb
++++ b/spec/ffi/struct_spec.rb
+@@ -669,4 +669,15 @@ describe "Struct allocation" do
+     end
+     S.new(FFI::MemoryPointer.new(S)).null?.should be_false
+   end
++
++  it "supports :bool as a struct member" do
++    lambda do
++      c = Class.new(FFI::Struct) do
++        layout :b, :bool
++      end
++      struct = c.new
++      struct[:b] = ! struct[:b]
++    end.should_not raise_error
++  end
++
+ end
+-- 
+1.9.3
+
