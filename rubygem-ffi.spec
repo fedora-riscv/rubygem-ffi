@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.9.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -98,6 +98,9 @@ popd
 
 
 %changelog
+* Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.3-4
+- Rebuild for ruby 2.2 again
+
 * Thu Jan 15 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.3-3
 - Rebuild for ruby 2.2
 - Use rspec2 for now
