@@ -2,13 +2,14 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.9.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
 License:        BSD
 URL:            http://wiki.github.com/ffi/ffi
 Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
+Patch0: 	ffi-aarch64.patch
 
 BuildRequires:  ruby-devel
 BuildRequires:  rubygems-devel
@@ -34,6 +35,7 @@ gem unpack %{SOURCE0}
 %setup -q -D -T -n  %{gem_name}-%{version}
 
 gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
+%patch0 -p1
 
 %build
 
@@ -98,6 +100,9 @@ popd
 
 
 %changelog
+* Fri Jan 23 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 1.9.3-5
+- fixed to build on aarch64
+
 * Fri Jan 16 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.3-4
 - Rebuild for ruby 2.2 again
 
