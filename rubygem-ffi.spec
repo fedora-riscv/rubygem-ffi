@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.9.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -100,6 +100,9 @@ popd
 
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.3-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Fri Jan 23 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 1.9.3-5
 - fixed to build on aarch64
 
