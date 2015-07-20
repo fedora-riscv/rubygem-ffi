@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.9.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -63,6 +63,9 @@ mv %{buildroot}%{gem_instdir}/lib/ffi_c.so %{buildroot}%{gem_extdir_mri}/lib/
 
 %endif
 
+# Remove the binary extension sources and build leftovers.
+rm -rf %{buildroot}%{gem_instdir}/ext
+
 %check
 pushd .%{gem_instdir}
 make -f libtest/GNUmakefile
@@ -89,7 +92,6 @@ popd
 %dir %{gem_instdir}
 %{gem_instdir}/Rakefile
 %{gem_instdir}/gen
-%exclude %{gem_instdir}/ext
 %exclude %{gem_instdir}/libtest
 %{gem_instdir}/ffi.gemspec
 %{gem_libdir}
@@ -100,6 +102,9 @@ popd
 
 
 %changelog
+* Mon Jul 20 2015 Vít Ondruch <vondruch@redhat.com> - 1.9.3-7
+- Fix dangling symlinks in -debuginfo package.
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
