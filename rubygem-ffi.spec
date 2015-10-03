@@ -1,15 +1,14 @@
 %global gem_name ffi
 
 Name:           rubygem-%{gem_name}
-Version:        1.9.3
-Release:        7%{?dist}
+Version:        1.9.10
+Release:        1{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
 License:        BSD
 URL:            http://wiki.github.com/ffi/ffi
 Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Patch0: 	ffi-aarch64.patch
 
 BuildRequires:  ruby-devel
 BuildRequires:  rubygems-devel
@@ -30,12 +29,19 @@ from Ruby code. Moreover, a Ruby-FFI extension works without changes
 on Ruby and JRuby. Discover why should you write your next extension
 using Ruby-FFI here[http://wiki.github.com/ffi/ffi/why-use-ffi].
 
+%package   doc
+Summary:   Documentation for %{name}
+Group:     Documentation
+Requires:  %{name} = %{version}-%{release}
+
+%description	doc
+This package contains documentation for %{name}.
+
 %prep
 gem unpack %{SOURCE0}
 %setup -q -D -T -n  %{gem_name}-%{version}
 
 gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
-%patch0 -p1
 
 %build
 
@@ -49,7 +55,6 @@ mkdir -p %{buildroot}%{gem_dir}
 cp -pa .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
-%if 0%{?fedora} >= 21
 mkdir -p %{buildroot}%{gem_extdir_mri}
 cp -a ./%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
 
@@ -57,29 +62,20 @@ pushd %{buildroot}
 rm -f .%{gem_extdir_mri}/{gem_make.out,mkmf.log}
 popd
 
-%else
-mkdir -p %{buildroot}%{gem_extdir_mri}/lib
-mv %{buildroot}%{gem_instdir}/lib/ffi_c.so %{buildroot}%{gem_extdir_mri}/lib/
-
-%endif
-
 # Remove the binary extension sources and build leftovers.
 rm -rf %{buildroot}%{gem_instdir}/ext
 
 %check
 pushd .%{gem_instdir}
-make -f libtest/GNUmakefile
+make -f libtest/GNUmakefile \
+	JFLAGS="%{optflags}"
+
 # test dies on arm, disabling on the arch
-%if 0%{?fedora} >= 21
 ruby -Ilib:ext/ffi_c -S \
-%endif
 %if 0%{?fedora} >= 22
 	rspec2 spec \
 %else
 	rspec spec \
-%endif
-%ifarch %{arm}
-		|| echo "Please investigate this"
 %endif
 
 popd
@@ -87,21 +83,28 @@ popd
 %files
 %doc %{gem_instdir}/COPYING
 %doc %{gem_instdir}/README.md
-%doc %{gem_instdir}/LICENSE
-%doc %{gem_docdir}
+%license %{gem_instdir}/LICENSE
 %dir %{gem_instdir}
-%{gem_instdir}/Rakefile
-%{gem_instdir}/gen
+
+%exclude %{gem_instdir}/Rakefile
+%exclude %{gem_instdir}/gen
 %exclude %{gem_instdir}/libtest
-%{gem_instdir}/ffi.gemspec
+%exclude %{gem_instdir}/ffi.gemspec
+
 %{gem_libdir}
-%{gem_instdir}/spec
 %{gem_extdir_mri}/
 %exclude %{gem_cache}
 %{gem_spec}
 
+%files doc
+%doc %{gem_docdir}
+%exclude %{gem_instdir}/spec
+
 
 %changelog
+* Sat Oct  3 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.10-1
+- 1.9.10
+
 * Mon Jul 20 2015 Vít Ondruch <vondruch@redhat.com> - 1.9.3-7
 - Fix dangling symlinks in -debuginfo package.
 
