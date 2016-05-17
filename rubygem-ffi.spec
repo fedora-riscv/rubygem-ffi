@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.9.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -55,12 +55,19 @@ mkdir -p %{buildroot}%{gem_dir}
 cp -pa .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
+%if 0%{?fedora} || 0%{?rhel} > 7
 mkdir -p %{buildroot}%{gem_extdir_mri}
 cp -a ./%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
 
 pushd %{buildroot}
 rm -f .%{gem_extdir_mri}/{gem_make.out,mkmf.log}
 popd
+
+%else
+mkdir -p %{buildroot}%{gem_extdir_mri}/lib
+mv %{buildroot}%{gem_instdir}/lib/ffi_c.so %{buildroot}%{gem_extdir_mri}/lib/
+
+%endif
 
 # Remove the binary extension sources and build leftovers.
 rm -rf %{buildroot}%{gem_instdir}/ext
@@ -102,6 +109,9 @@ popd
 
 
 %changelog
+* Thu Dec 10 2015 Yaakov Selkowitz <yselkowi@redhat.com> - 1.9.10-2
+- Restore spec compatibility with EPEL.
+
 * Sat Oct  3 2015 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.10-1
 - 1.9.10
 
