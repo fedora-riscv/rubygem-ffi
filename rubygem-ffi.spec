@@ -1,26 +1,20 @@
 %global gem_name ffi
 
-Name:           rubygem-%{gem_name}
-Version:        1.9.10
-Release:        3%{?dist}
-Summary:        FFI Extensions for Ruby
-Group:          Development/Languages
+Name: rubygem-%{gem_name}
+Version: 1.9.14
+Release: 1%{?dist}
+Summary: FFI Extensions for Ruby
+Group: Development/Languages
 
-License:        BSD
-URL:            http://wiki.github.com/ffi/ffi
-Source0:	http://rubygems.org/gems/%{gem_name}-%{version}.gem
+License: BSD
+URL: http://wiki.github.com/ffi/ffi
+Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 
-BuildRequires:  ruby-devel
-BuildRequires:  rubygems-devel
-BuildRequires:	libffi-devel
-%if 0%{?fedora} >= 22
-BuildRequires:	rubygem(rspec2)
-%else
-BuildRequires:	rubygem(rspec)
-%endif
-Requires:       ruby(rubygems)
-Requires:       ruby(release)
-Provides:       rubygem(%{gem_name}) = %{version}
+BuildRequires: ruby(release)
+BuildRequires: rubygems-devel
+BuildRequires: ruby-devel
+BuildRequires: libffi-devel
+BuildRequires: rubygem(rspec2)
 
 %description
 Ruby-FFI is a ruby extension for programmatically loading dynamic
@@ -29,22 +23,23 @@ from Ruby code. Moreover, a Ruby-FFI extension works without changes
 on Ruby and JRuby. Discover why should you write your next extension
 using Ruby-FFI here[http://wiki.github.com/ffi/ffi/why-use-ffi].
 
-%package   doc
-Summary:   Documentation for %{name}
-Group:     Documentation
-Requires:  %{name} = %{version}-%{release}
+%package doc
+Summary: Documentation for %{name}
+Group: Documentation
+Requires: %{name} = %{version}-%{release}
+BuildArch: noarch
 
-%description	doc
-This package contains documentation for %{name}.
+%description doc
+Documentation for %{name}.
 
 %prep
 gem unpack %{SOURCE0}
+
 %setup -q -D -T -n  %{gem_name}-%{version}
 
 gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 
 %build
-
 # Create the gem as gem install only works on a gem file
 gem build %{gem_name}.gemspec
 
@@ -52,56 +47,54 @@ gem build %{gem_name}.gemspec
 
 %install
 mkdir -p %{buildroot}%{gem_dir}
-cp -pa .%{gem_dir}/* \
+cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
 mkdir -p %{buildroot}%{gem_extdir_mri}
-cp -a ./%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
+cp -a .%{gem_extdir_mri}/{gem.build_complete,*.so} %{buildroot}%{gem_extdir_mri}/
 
-pushd %{buildroot}
-rm -f .%{gem_extdir_mri}/{gem_make.out,mkmf.log}
-popd
+# Prevent dangling symlink in -debuginfo (rhbz#878863).
+rm -rf %{buildroot}%{gem_instdir}/ext/
 
-# Remove the binary extension sources and build leftovers.
-rm -rf %{buildroot}%{gem_instdir}/ext
+
+# Fix the permissions.
+# https://github.com/ffi/ffi/pull/545
+chmod a-x %{buildroot}%{gem_libdir}/ffi/platform/i386-cygwin/types.conf
+chmod a-x %{buildroot}%{gem_libdir}/ffi/platform/x86_64-cygwin/types.conf
+
 
 %check
 pushd .%{gem_instdir}
-make -f libtest/GNUmakefile \
-	JFLAGS="%{optflags}"
+# Build the test library with Fedora build options.
+pushd spec/ffi/fixtures
+make JFLAGS="%{optflags}"
+popd
 
-# test dies on arm, disabling on the arch
-ruby -Ilib:ext/ffi_c -S \
-%if 0%{?fedora} >= 22
-	rspec2 spec \
-%else
-	rspec spec \
-%endif
-
+rspec2 -I$(dirs +1)%{gem_extdir_mri} spec
 popd
 
 %files
-%doc %{gem_instdir}/COPYING
-%doc %{gem_instdir}/README.md
-%license %{gem_instdir}/LICENSE
 %dir %{gem_instdir}
-
-%exclude %{gem_instdir}/Rakefile
-%exclude %{gem_instdir}/gen
-%exclude %{gem_instdir}/libtest
+%{gem_extdir_mri}
+%license %{gem_instdir}/COPYING
+%license %{gem_instdir}/LICENSE
 %exclude %{gem_instdir}/ffi.gemspec
-
+%exclude %{gem_instdir}/gen
 %{gem_libdir}
-%{gem_extdir_mri}/
+%exclude %{gem_instdir}/libtest
+%exclude %{gem_instdir}/spec
 %exclude %{gem_cache}
 %{gem_spec}
 
 %files doc
 %doc %{gem_docdir}
-%exclude %{gem_instdir}/spec
-
+%doc %{gem_instdir}/README.md
+%{gem_instdir}/Rakefile
 
 %changelog
+* Tue Jan 03 2017 Vít Ondruch <vondruch@redhat.com> - 1.9.14-1
+- Update to FFI 1.9.14.
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.10-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
@@ -170,10 +163,10 @@ popd
 * Wed Mar 10 2010 Bryan Kearney <bkearney@redhat.com> - 0.6.2-1
 - Power PC fixes from upstream which were found testing 0.6.2
 
-* Tue Feb 22 2010 Bryan Kearney <bkearney@redhat.com> - 0.6.2-1
+* Mon Feb 22 2010 Bryan Kearney <bkearney@redhat.com> - 0.6.2-1
 - Pull in 0.6.2 from upstream
 
-* Tue Feb 22 2010 Bryan Kearney <bkearney@redhat.com> - 0.5.4-3
+* Mon Feb 22 2010 Bryan Kearney <bkearney@redhat.com> - 0.5.4-3
 - Final updates based on package review
 
 * Tue Feb 16 2010 Bryan Kearney <bkearney@redhat.com> - 0.5.4-2
