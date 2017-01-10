@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.9.14
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: FFI Extensions for Ruby
 Group: Development/Languages
 
@@ -92,6 +92,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Tue Jan 10 2017 Vít Ondruch <vondruch@redhat.com> - 1.9.14-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.4
+
 * Tue Jan 03 2017 Vít Ondruch <vondruch@redhat.com> - 1.9.14-1
 - Update to FFI 1.9.14.
 
