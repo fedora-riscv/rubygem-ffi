@@ -1,17 +1,14 @@
 %global gem_name ffi
 
 Name: rubygem-%{gem_name}
-Version: 1.9.14
-Release: 3%{?dist}
+Version: 1.9.18
+Release: 1%{?dist}
 Summary: FFI Extensions for Ruby
 Group: Development/Languages
 
 License: BSD
 URL: http://wiki.github.com/ffi/ffi
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
-# Suppress deprecated Fixnum warnings on Ruby 2.4.0.
-# https://github.com/ffi/ffi/pull/557
-Patch0: rubygem-ffi-1.9.17-suppress-Fixnum-warning-ruby2.4.patch
 
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
@@ -41,8 +38,6 @@ gem unpack %{SOURCE0}
 %setup -q -D -T -n  %{gem_name}-%{version}
 
 gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
-
-%patch0 -p1
 
 %build
 # Create the gem as gem install only works on a gem file
@@ -97,6 +92,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Mar 31 2017 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.18-1
+- 1.9.18
+
 * Fri Feb 10 2017 Jun Aruga <jaruga@redhat.com> - 1.9.14-3
 - Suppress deprecated Fixnum warnings on Ruby 2.4.0.
 
