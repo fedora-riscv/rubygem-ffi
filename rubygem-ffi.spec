@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.9.18
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: FFI Extensions for Ruby
 Group: Development/Languages
 
@@ -92,6 +92,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.18-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Fri Mar 31 2017 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.18-1
 - 1.9.18
 
