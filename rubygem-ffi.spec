@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.9.18
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: FFI Extensions for Ruby
 Group: Development/Languages
 
@@ -42,6 +42,36 @@ gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
 %build
 # Create the gem as gem install only works on a gem file
 gem build %{gem_name}.gemspec
+
+# FIXME (2018/01/05)
+# With ruby25, rdoc generation segfaults. Disabling for now.
+rm -rf BINDIR
+mkdir BINDIR
+cat > BINDIR/gem << EOF
+#! /bin/bash
+
+args=
+while [ \$# -ge 1 ]
+do
+	arg_o="\$1"
+	case "\$arg_o" in
+	--document=* )
+		arg="--document=ri"
+		;;
+	* )
+		arg="\$arg_o"
+		;;
+	esac
+	args="\$args \$arg"
+	shift
+done
+
+set -x
+exec /usr/bin/gem \$args
+EOF
+
+chmod 0755 BINDIR/gem
+export PATH="$(pwd)/BINDIR:$PATH"
 
 %gem_install
 
@@ -92,6 +122,10 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Jan 05 2018 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.9.18-4
+- F-28: rebuild for ruby25
+- Disabling rdoc generation for now to avoid segfault
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.18-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
