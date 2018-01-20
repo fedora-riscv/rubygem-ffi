@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.9.18
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: FFI Extensions for Ruby
 Group: Development/Languages
 
@@ -92,6 +92,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Sat Jan 20 2018 Björn Esser <besser82@fedoraproject.org> - 1.9.18-6
+- Rebuilt for switch to libxcrypt
+
 * Tue Jan 09 2018 Vít Ondruch <vondruch@redhat.com> - 1.9.18-5
 - Re-enable rdoc generation.
 
