@@ -1,20 +1,23 @@
 %global gem_name ffi
 
 Name: rubygem-%{gem_name}
-Version: 1.9.18
-Release: 7%{?dist}
+Version: 1.9.23
+Release: 1%{?dist}
 Summary: FFI Extensions for Ruby
-Group: Development/Languages
-
 License: BSD
 URL: http://wiki.github.com/ffi/ffi
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
-
+# git clone https://github.com/ffi/ffi.git && cd ffi
+# git checkout 1.9.23 && tar czvf ffi-1.9.23-spec.tgz spec/
+Source1: %{gem_name}-%{version}-spec.tgz
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby-devel
+# Compiler is required for build of gem binary extension.
+# https://fedoraproject.org/wiki/Packaging:C_and_C++#BuildRequires_and_Requires
+BuildRequires: gcc
 BuildRequires: libffi-devel
-BuildRequires: rubygem(rspec2)
+BuildRequires: rubygem(rspec)
 
 %description
 Ruby-FFI is a ruby extension for programmatically loading dynamic
@@ -25,7 +28,6 @@ using Ruby-FFI here[http://wiki.github.com/ffi/ffi/why-use-ffi].
 
 %package doc
 Summary: Documentation for %{name}
-Group: Documentation
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
@@ -33,15 +35,11 @@ BuildArch: noarch
 Documentation for %{name}.
 
 %prep
-gem unpack %{SOURCE0}
-
-%setup -q -D -T -n  %{gem_name}-%{version}
-
-gem spec %{SOURCE0} -l --ruby > %{gem_name}.gemspec
+%setup -q -n  %{gem_name}-%{version} -b 1
 
 %build
 # Create the gem as gem install only works on a gem file
-gem build %{gem_name}.gemspec
+gem build ../%{gem_name}-%{version}.gemspec
 
 %gem_install
 
@@ -57,41 +55,42 @@ cp -a .%{gem_extdir_mri}/{gem.build_complete,*.so} %{buildroot}%{gem_extdir_mri}
 rm -rf %{buildroot}%{gem_instdir}/ext/
 
 
-# Fix the permissions.
-# https://github.com/ffi/ffi/pull/545
-chmod a-x %{buildroot}%{gem_libdir}/ffi/platform/i386-cygwin/types.conf
-chmod a-x %{buildroot}%{gem_libdir}/ffi/platform/x86_64-cygwin/types.conf
-
-
 %check
 pushd .%{gem_instdir}
+ln -s %{_builddir}/spec spec
+
 # Build the test library with Fedora build options.
 pushd spec/ffi/fixtures
 make JFLAGS="%{optflags}"
 popd
 
-rspec2 -I$(dirs +1)%{gem_extdir_mri} spec
+rspec -I$(dirs +1)%{gem_extdir_mri} spec
 popd
 
 %files
 %dir %{gem_instdir}
 %{gem_extdir_mri}
+%exclude %{gem_instdir}/.*
 %license %{gem_instdir}/COPYING
 %license %{gem_instdir}/LICENSE
-%exclude %{gem_instdir}/ffi.gemspec
-%exclude %{gem_instdir}/gen
+%license %{gem_instdir}/LICENSE.SPECS
+%exclude %{gem_instdir}/appveyor.yml
 %{gem_libdir}
-%exclude %{gem_instdir}/libtest
-%exclude %{gem_instdir}/spec
 %exclude %{gem_cache}
 %{gem_spec}
 
 %files doc
 %doc %{gem_docdir}
+%{gem_instdir}/Gemfile
 %doc %{gem_instdir}/README.md
 %{gem_instdir}/Rakefile
+%{gem_instdir}/samples
+%{gem_instdir}/ffi.gemspec
 
 %changelog
+* Wed Feb 28 2018 Vít Ondruch <vondruch@redhat.com> - 1.9.23-1
+- Update to FFI 1.9.23.
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.18-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
