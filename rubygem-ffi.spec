@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.9.23
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: http://wiki.github.com/ffi/ffi
@@ -88,6 +88,9 @@ popd
 %{gem_instdir}/ffi.gemspec
 
 %changelog
+* Thu Jan 17 2019 Vít Ondruch <vondruch@redhat.com> - 1.9.23-3
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.6
+
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.23-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
