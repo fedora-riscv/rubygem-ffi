@@ -1,14 +1,14 @@
 %global gem_name ffi
 
 Name: rubygem-%{gem_name}
-Version: 1.9.23
-Release: 3%{?dist}
+Version: 1.10.0
+Release: 1%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: http://wiki.github.com/ffi/ffi
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 # git clone https://github.com/ffi/ffi.git && cd ffi
-# git checkout 1.9.23 && tar czvf ffi-1.9.23-spec.tgz spec/
+# git checkout 1.10.0 && tar czvf ffi-1.10.0-spec.tgz spec/
 Source1: %{gem_name}-%{version}-spec.tgz
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
@@ -40,7 +40,6 @@ Documentation for %{name}.
 %build
 # Create the gem as gem install only works on a gem file
 gem build ../%{gem_name}-%{version}.gemspec
-
 %gem_install
 
 %install
@@ -81,6 +80,7 @@ popd
 
 %files doc
 %doc %{gem_docdir}
+%doc %{gem_instdir}/CHANGELOG.md
 %{gem_instdir}/Gemfile
 %doc %{gem_instdir}/README.md
 %{gem_instdir}/Rakefile
@@ -88,6 +88,9 @@ popd
 %{gem_instdir}/ffi.gemspec
 
 %changelog
+* Wed Jan 23 2019 Pavel Valena <pvalena@redhat.com> - 1.10.0-1
+- Update to FFI 1.10.0.
+
 * Thu Jan 17 2019 Vít Ondruch <vondruch@redhat.com> - 1.9.23-3
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.6
 
