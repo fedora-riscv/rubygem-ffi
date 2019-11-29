@@ -1,15 +1,15 @@
 %global gem_name ffi
 
 Name: rubygem-%{gem_name}
-Version: 1.10.0
-Release: 3%{?dist}
+Version: 1.12.1
+Release: 1%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
-URL: http://wiki.github.com/ffi/ffi
+URL: https://github.com/ffi/ffi/wiki
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
-# git clone https://github.com/ffi/ffi.git && cd ffi
-# git checkout 1.10.0 && tar czvf ffi-1.10.0-spec.tgz spec/
-Source1: %{gem_name}-%{version}-spec.tgz
+# git clone https://github.com/ffi/ffi.git --no-checkout
+# cd ffi && git archive -v -o ffi-1.12.1-spec.txz 1.12.1 spec/
+Source1: %{gem_name}-%{version}-spec.txz
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby-devel
@@ -63,7 +63,7 @@ pushd spec/ffi/fixtures
 make JFLAGS="%{optflags}"
 popd
 
-rspec -I$(dirs +1)%{gem_extdir_mri} spec
+RUBYOPT="-I$(dirs +1)%{gem_extdir_mri}" rspec spec
 popd
 
 %files
@@ -88,6 +88,9 @@ popd
 %{gem_instdir}/ffi.gemspec
 
 %changelog
+* Mon Jan 20 2020 Pavel Valena <pvalena@redhat.com> - 1.12.1-1
+- Update to ffi 1.12.1.
+
 * Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
