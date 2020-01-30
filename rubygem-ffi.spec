@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.12.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: https://github.com/ffi/ffi/wiki
@@ -88,6 +88,9 @@ popd
 %{gem_instdir}/ffi.gemspec
 
 %changelog
+* Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.12.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Mon Jan 20 2020 Pavel Valena <pvalena@redhat.com> - 1.12.1-1
 - Update to ffi 1.12.1.
 
