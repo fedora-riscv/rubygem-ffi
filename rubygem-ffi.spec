@@ -1,14 +1,14 @@
 %global gem_name ffi
 
 Name: rubygem-%{gem_name}
-Version: 1.12.1
-Release: 3%{?dist}
+Version: 1.13.1
+Release: 1%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: https://github.com/ffi/ffi/wiki
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 # git clone https://github.com/ffi/ffi.git --no-checkout
-# cd ffi && git archive -v -o ffi-1.12.1-spec.txz 1.12.1 spec/
+# cd ffi && git archive -v -o ffi-1.13.1-spec.txz 1.13.1 spec/
 Source1: %{gem_name}-%{version}-spec.txz
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
@@ -17,7 +17,8 @@ BuildRequires: ruby-devel
 # https://fedoraproject.org/wiki/Packaging:C_and_C++#BuildRequires_and_Requires
 BuildRequires: gcc
 BuildRequires: libffi-devel
-BuildRequires: rubygem(rspec)
+BuildRequires: rubygem(rspec) >= 3
+BuildRequires: rubygem(bigdecimal)
 
 %description
 Ruby-FFI is a ruby extension for programmatically loading dynamic
@@ -88,6 +89,10 @@ popd
 %{gem_instdir}/ffi.gemspec
 
 %changelog
+* Thu Nov 12 22:57:22 CET 2020 Pavel Valena <pvalena@redhat.com> - 1.13.1-1
+- Update to ffi 1.13.1.
+  Resolves: rhbz#1797215
+
 * Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.12.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
