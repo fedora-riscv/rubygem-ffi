@@ -64,6 +64,13 @@ pushd spec/ffi/fixtures
 make JFLAGS="%{optflags}"
 popd
 
+# Previously disabled long double test fails on i686.
+# https://github.com/ffi/ffi/issues/849
+%ifarch i686
+sed -i '/it "add two long double numbers" do/a\
+    skip' spec/ffi/long_double_spec.rb
+%endif
+
 RUBYOPT="-I$(dirs +1)%{gem_extdir_mri}" rspec spec
 popd
 
@@ -89,6 +96,9 @@ popd
 %{gem_instdir}/ffi.gemspec
 
 %changelog
+* Thu Dec 03 2020 Vít Ondruch <vondruch@redhat.com> - 1.13.1-1
+- Disable long double test failing on i686.
+
 * Thu Nov 12 22:57:22 CET 2020 Pavel Valena <pvalena@redhat.com> - 1.13.1-1
 - Update to ffi 1.13.1.
   Resolves: rhbz#1797215
