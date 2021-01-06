@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.13.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: https://github.com/ffi/ffi/wiki
@@ -96,6 +96,9 @@ popd
 %{gem_instdir}/ffi.gemspec
 
 %changelog
+* Wed Jan  6 2021 Vít Ondruch <vondruch@redhat.com> - 1.13.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_3.0
+
 * Thu Dec 03 2020 Vít Ondruch <vondruch@redhat.com> - 1.13.1-1
 - Disable long double test failing on i686.
 
