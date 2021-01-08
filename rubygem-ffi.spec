@@ -10,6 +10,7 @@ Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 # git clone https://github.com/ffi/ffi.git --no-checkout
 # cd ffi && git archive -v -o ffi-1.13.1-spec.txz 1.13.1 spec/
 Source1: %{gem_name}-%{version}-spec.txz
+BuildRequires: make
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby-devel
