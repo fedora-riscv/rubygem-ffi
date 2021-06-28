@@ -1,14 +1,14 @@
 %global gem_name ffi
 
 Name: rubygem-%{gem_name}
-Version: 1.13.1
-Release: 4%{?dist}
+Version: 1.15.4
+Release: 1%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: https://github.com/ffi/ffi/wiki
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 # git clone https://github.com/ffi/ffi.git --no-checkout
-# cd ffi && git archive -v -o ffi-1.13.1-spec.txz 1.13.1 spec/
+# cd ffi && git archive -v -o ffi-1.15.4-spec.txz v1.15.4 spec/
 Source1: %{gem_name}-%{version}-spec.txz
 BuildRequires: make
 BuildRequires: ruby(release)
@@ -82,7 +82,6 @@ popd
 %license %{gem_instdir}/COPYING
 %license %{gem_instdir}/LICENSE
 %license %{gem_instdir}/LICENSE.SPECS
-%exclude %{gem_instdir}/appveyor.yml
 %{gem_libdir}
 %exclude %{gem_cache}
 %{gem_spec}
@@ -95,8 +94,13 @@ popd
 %{gem_instdir}/Rakefile
 %{gem_instdir}/samples
 %{gem_instdir}/ffi.gemspec
+%{gem_instdir}/rakelib/ffi_gem_helper.rb
 
 %changelog
+* Mon Sep 13 2021 Pavel Valena <pvalena@redhat.com> - 1.15.4-1
+- Update to ffi 1.15.4.
+  Resolves: rhbz#1909309
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.13.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
