@@ -1,14 +1,14 @@
 %global gem_name ffi
 
 Name: rubygem-%{gem_name}
-Version: 1.15.4
-Release: 2%{?dist}
+Version: 1.15.5
+Release: 1%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: https://github.com/ffi/ffi/wiki
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 # git clone https://github.com/ffi/ffi.git --no-checkout
-# cd ffi && git archive -v -o ffi-1.15.4-spec.txz v1.15.4 spec/
+# cd ffi && git archive -v -o ffi-1.15.5-spec.txz v1.15.5 spec/
 Source1: %{gem_name}-%{version}-spec.txz
 BuildRequires: make
 BuildRequires: ruby(release)
@@ -97,6 +97,10 @@ popd
 %{gem_instdir}/rakelib/ffi_gem_helper.rb
 
 %changelog
+* Tue Jan 18 2022 Pavel Valena <pvalena@redhat.com> - 1.15.5-1
+- Update to ffi 1.15.5.
+  Resolves: rhbz#2038923
+
 * Sat Jan 08 2022 Miro Hrončok <mhroncok@redhat.com> - 1.15.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Changes/LIBFFI34
 
