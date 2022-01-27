@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.15.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: https://github.com/ffi/ffi/wiki
@@ -94,6 +94,9 @@ popd
 %{gem_instdir}/rakelib/ffi_gem_helper.rb
 
 %changelog
+* Thu Jan 27 2022 Vít Ondruch <vondruch@redhat.com> - 1.15.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_3.1
+
 * Thu Jan 27 2022 Vít Ondruch <vondruch@redhat.com> - 1.15.5-2
 - Disable fork spec broken by recent libffi.
 - Re-enable long double test fixed by FFI 1.15.5.
