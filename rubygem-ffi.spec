@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.15.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: FFI Extensions for Ruby
 License: BSD
 URL: https://github.com/ffi/ffi/wiki
@@ -97,6 +97,9 @@ popd
 %{gem_instdir}/rakelib/ffi_gem_helper.rb
 
 %changelog
+* Thu Jan 27 2022 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.15.5-2
+- F-36: rebuild against ruby31
+
 * Tue Jan 18 2022 Pavel Valena <pvalena@redhat.com> - 1.15.5-1
 - Update to ffi 1.15.5.
   Resolves: rhbz#2038923
