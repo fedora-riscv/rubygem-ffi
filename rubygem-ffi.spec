@@ -65,13 +65,6 @@ pushd spec/ffi/fixtures
 make JFLAGS="%{optflags}"
 popd
 
-# Previously disabled long double test fails on i686.
-# https://github.com/ffi/ffi/issues/849
-%ifarch i686
-sed -i '/it "add two long double numbers" do/a\
-    skip' spec/ffi/long_double_spec.rb
-%endif
-
 # Recent libffi corrupts dynamically allocated closures with call to fork.
 # https://bugzilla.redhat.com/show_bug.cgi?id=2040380
 mv spec/ffi/fork_spec.rb{,.disabled}
@@ -103,6 +96,7 @@ popd
 %changelog
 * Thu Jan 27 2022 Vít Ondruch <vondruch@redhat.com> - 1.15.5-2
 - Disable fork spec broken by recent libffi.
+- Re-enable long double test fixed by FFI 1.15.5.
 
 * Thu Jan 27 2022 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.15.5-2
 - F-36: rebuild against ruby31
